@@ -3,8 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "build": "node copy-ocr-assets.mjs && vite build",
+        "dev": "vite",
+        "test:ocr": "node --test tests/receipt-parser.test.mjs"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
@@ -15,5 +16,12 @@
     },
     "optionalDependencies": {
         "@laravel/multiplex": "^0.4.1"
+    },
+    "dependencies": {
+        "@tesseract.js-data/eng": "1.0.0",
+        "tesseract.js": "6.0.1"
+    },
+    "overrides": {
+        "shell-quote": "1.11.0"
     }
 }

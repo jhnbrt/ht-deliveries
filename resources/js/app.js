@@ -43,8 +43,9 @@ if (itemRows) {
     let index = itemRows.children.length;
     document.querySelector('#add-row').addEventListener('click', () => {
         if (itemRows.children.length >= 200) { return; }
+        index = Math.max(index, ...Array.from(itemRows.querySelectorAll('input')).map(input => Number(input.name.match(/items\[(\d+)\]/)?.[1] ?? -1) + 1));
         const row = document.createElement('tr');
-        row.innerHTML = `<td><input name="items[${index}][sku]" aria-label="SKU" maxlength="255"></td><td><input name="items[${index}][item]" aria-label="Item" required maxlength="255"></td><td><input type="number" name="items[${index}][quantity]" aria-label="Quantity" step="any" min="0.000001" max="99999999" required></td><td><button type="button" class="remove-row" aria-label="Remove item">×</button></td>`;
+        row.innerHTML = `<td><input name="items[${index}][line_number]" aria-label="Number" value="${itemRows.children.length + 1}" maxlength="255"></td><td><input name="items[${index}][item]" aria-label="FS Item" required maxlength="255"></td><td><input name="items[${index}][sku]" aria-label="Item SKU" maxlength="255"></td><td><input type="number" name="items[${index}][item_quantity]" aria-label="Item quantity" step="any" min="0" max="99999999"></td><td><input name="items[${index}][total_order]" aria-label="Total order" maxlength="255"></td><td><input type="number" name="items[${index}][quantity]" aria-label="Received order" step="any" min="0" max="99999999" required></td><td><button type="button" class="remove-row" aria-label="Remove item">×</button></td>`;
         itemRows.append(row);
         row.querySelector('input').focus();
         index++;
@@ -75,4 +76,25 @@ if (copyButton) {
             feedback.textContent = 'Press Ctrl+C (Cmd+C on Mac) to copy the selected data, then paste into Google Sheets.';
         }
     });
+}
+
+
+
+import './free-receipt-reader';
+
+const photoViewport = document.querySelector('.photo-viewport');
+if (photoViewport) {
+    let zoom = 1;
+    const setZoom = value => {
+        zoom = Math.min(3, Math.max(1, value));
+        photoViewport.style.setProperty('--photo-zoom', zoom);
+        photoViewport.classList.toggle('zoomed', zoom > 1);
+        document.querySelector('#photo-zoom-label').textContent = zoom === 1 ? 'Fit' : `${Math.round(zoom * 100)}%`;
+        document.querySelector('#photo-zoom-out').disabled = zoom === 1;
+        document.querySelector('#photo-zoom-in').disabled = zoom === 3;
+    };
+    document.querySelector('#photo-zoom-in').addEventListener('click', () => setZoom(zoom + .25));
+    document.querySelector('#photo-zoom-out').addEventListener('click', () => setZoom(zoom - .25));
+    document.querySelector('#photo-fit').addEventListener('click', () => { setZoom(1); photoViewport.scrollTo(0,0); });
+    setZoom(1);
 }

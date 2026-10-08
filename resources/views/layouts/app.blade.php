@@ -5,7 +5,7 @@
     <title>@yield('title', 'Dashboard') · HTDeliveries</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="{{ request()->routeIs('deliveries.edit') ? 'receipt-workspace' : '' }}">
 <div class="app-shell">
     <aside class="sidebar">
         <a class="brand" href="{{ route('dashboard') }}"><span class="brand-symbol">HT</span> DELIVERIES</a>

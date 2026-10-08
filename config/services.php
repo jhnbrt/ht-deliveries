@@ -14,6 +14,11 @@ return [
     |
     */
 
+    'receipt_reader' => [
+        'key' => env('OPENAI_API_KEY'),
+        'model' => env('DR_READER_MODEL', 'gpt-4.1-mini'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],
